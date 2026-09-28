@@ -55,10 +55,13 @@ nightly bake. Run the "Nightly content snapshot" action by hand (Actions tab
    `julianastanley-com`). Save the database password somewhere, you won't
    need it day-to-day.
 2. **SQL Editor → New query**: paste and run each file in
-   `supabase/migrations/` **in numeric order**:
+   `supabase/migrations/` **in numeric order** (each is run once):
    - `0001_init.sql` — tables, triggers, security policies. Edit the
-     `app_admins` insert first if you want a different admin email.
-   - `0002_seed.sql` — the initial content (only run this once).
+     `app_admins` insert first if you want a different admin email
+     (lowercase).
+   - `0002_seed.sql` — the initial content.
+   - `0003_fixes.sql` — only for a database that ran 0001/0002 before
+     2026-09-28; fresh installs already include these fixes.
 3. **Authentication → Sign In / Providers → Email**: turn **Allow new users
    to sign up** OFF. This site has exactly one account.
 4. **Authentication → Users → Add user → Create new user**: your admin email
@@ -66,8 +69,13 @@ nightly bake. Run the "Nightly content snapshot" action by hand (Actions tab
    User".
 5. **Authentication → URL Configuration**: set *Site URL* to
    `https://julianastanley.com/admin/` and add that plus
-   `http://localhost:8766` to *Redirect URLs* (password-reset links come
-   back to these).
+   `http://localhost:8766/*` to *Redirect URLs* (password-reset links come
+   back to these; the wildcard matters — the reset link returns to
+   `/admin/`, and a bare origin doesn't cover it).
+   Note on reset emails: Supabase's built-in mailer is rate-limited and only
+   delivers to members of your Supabase organization — add the admin email
+   as a team member, or just reset the password from **Authentication →
+   Users** in the dashboard when needed.
 6. **Project Settings → API** (or "Data API"): copy the **Project URL** and
    the **anon / publishable key** into `js/config.js`. Both are public by
    design; Row Level Security is what protects writes.
@@ -81,8 +89,10 @@ nightly bake. Run the "Nightly content snapshot" action by hand (Actions tab
 3. Still in Pages settings, set **Custom domain** to `julianastanley.com`
    (this matches the `CNAME` file) and, once DNS below propagates, check
    **Enforce HTTPS**.
-4. **Settings → Actions → General → Workflow permissions**: "Read and write
-   permissions" (the snapshot workflow commits to the repo).
+
+No Actions settings need changing: `snapshot.yml` requests the write
+permission it needs itself (`permissions: contents: write`), so the repo
+default can stay read-only.
 
 ### 3. DNS (Namecheap, julianastanley.com)
 
@@ -118,6 +128,13 @@ Backups need no setup: the nightly workflow reads the same public data the
 website serves, so there are no secrets to configure. It also acts as the
 keep-alive that stops the free Supabase project from pausing after a week
 of inactivity.
+
+One caveat: GitHub disables a `schedule` trigger after ~60 days without any
+repository activity (it emails a warning first). If that happens, re-enable
+the workflow from the **Actions** tab — and if the Supabase project was
+paused in the meantime, restore it from its dashboard (the site keeps
+serving from `snapshots/entries.json` while it's down; only editing stops
+working).
 
 ## Running locally
 

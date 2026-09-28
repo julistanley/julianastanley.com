@@ -26,8 +26,13 @@ async function fromSnapshot() {
 export async function loadEntries() {
   let list;
   if (isConfigured()) {
-    try { list = await fromSupabase(); }
-    catch (err) { console.warn('Falling back to snapshot:', err); }
+    try {
+      const data = await fromSupabase();
+      // An empty array is how PostgREST reports "RLS let you see nothing";
+      // the snapshot is more useful than a blank site in that case too.
+      if (Array.isArray(data) && data.length) list = data;
+      else console.warn('Supabase returned no entries; falling back to snapshot.');
+    } catch (err) { console.warn('Falling back to snapshot:', err); }
   }
   if (!list) list = await fromSnapshot();
 

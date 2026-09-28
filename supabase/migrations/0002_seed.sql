@@ -18,10 +18,10 @@ julianst[at]mit[dot]edu · [eight-five-eight]837-0221 · Boston, MA
 - 2020–present: PhD Student (Department of Biology), Massachusetts Institute of Technology.
   - [Gene-Wei Li lab](http://gwli.scripts.mit.edu/group/). Currently characterizing mechanisms of leaderless mRNA translation in bacteria.
 - 2018–2020: MS Bioinformatics, Northeastern University.
-  - Research with [Pam Silver's lab](https://silver.med.harvard.edu/) in the Department of Systems Biology at Harvard Medical School.
+  - Research with [Pam Silver's lab](https://www.silverlabhms.org/) in the Department of Systems Biology at Harvard Medical School.
 - 2015–2019: BS Biology, Northeastern University.
   - 2015–2019: Thesis with [Javier Apfeld's lab](https://apfeldlab.mystrikingly.com/).
-  - 2017–2018: Research Assistant at [Cygnal Therapeutics](https://www.cygnaltx.com).
+  - 2017–2018: Research Assistant at Cygnal Therapeutics.
 
 [Full CV (PDF)](/assets/files/CV.pdf)
 
@@ -31,7 +31,7 @@ I think that research should be entirely reproducible. So, I am trying to hold m
 
 If you would like to reach me, feel free to just shoot an email. Alternatively, you can just text me at the number listed above--don't be shy!
 
-[email](mailto:%6A%75%6C%69%61%6E%73%74@%6D%69%74.%65%64%75) · [ORCID](https://orcid.org/0000-0002-9193-3791) · [Google Scholar](https://scholar.google.com/citations?user=N0D7hFYAAAAJ) · [GitHub](https://github.com/julistanley) · [LinkedIn](https://www.linkedin.com/in/julianstanley) · [Twitter](https://twitter.com/julianstanley_)
+[email](mailto:%6A%75%6C%69%61%6E%73%74@%6D%69%74.%65%64%75) · [ORCID](https://orcid.org/0000-0002-9193-3791) · [Google Scholar](https://scholar.google.com/citations?user=N0D7hFYAAAAJ) · [GitHub](https://github.com/julistanley) · [LinkedIn](https://www.linkedin.com/in/julianstanley)
 $md$),
   ('page'::public.entry_kind, 'blog', 'blog', '', null, 2, true, $md$Articles, opinions, and (hopefully) helpful guides.
 $md$),
@@ -49,11 +49,11 @@ I previously published under the name Julian A. Stanley; my ORCID lists all publ
 
 #### 2020
 
-- **Stanley, J. A.**, Johnsen, S. B. & Apfeld, J. The SensorOverlord predicts the accuracy of measurements with ratiometric biosensors. Sci Rep 10, 16843 (2020). [Open Access](https://www.nature.com/articles/s41598-020-73987-0) \| [Supplement](https://uploads.strikinglycdn.com/files/99afd93f-4c35-47a5-8b31-520f483eb08a/Stanley2020supplement.pdf) \| [Code](https://github.com/apfeldlab/sensoroverlord) \| [Website](https://sensoroverlord.org/)
+- **Stanley, J. A.**, Johnsen, S. B. & Apfeld, J. The SensorOverlord predicts the accuracy of measurements with ratiometric biosensors. Sci Rep 10, 16843 (2020). [Open Access](https://www.nature.com/articles/s41598-020-73987-0) \| [Supplement](https://uploads.strikinglycdn.com/files/99afd93f-4c35-47a5-8b31-520f483eb08a/Stanley2020supplement.pdf) \| [Code](https://github.com/apfeldlab/sensoroverlord) \| [Website](https://apfeldlab.github.io/SensorOverlord/)
 
 - Schiffer, J. A. et al. Caenorhabditis elegans processes sensory information to choose between freeloading and self-defense strategies. eLife 9, e56186 (2020). [Open Access](https://elifesciences.org/articles/56186)
 
-- Chang, R. L., **Stanley, J. A.** et al. Protein structure, amino acid composition and sequence determine proteome vulnerability to oxidation‐induced damage. EMBO J 39, (2020). [Open Access](https://www.embopress.org/doi/full/10.15252/embj.2020104523) \| [Code](https://github.com/julianstanley/ProteinFeatures) \| [Extra Documentation](https://julianstanley.github.io/ProteinFeatures/docs/public/intro_public.html)
+- Chang, R. L., **Stanley, J. A.** et al. Protein structure, amino acid composition and sequence determine proteome vulnerability to oxidation‐induced damage. EMBO J 39, (2020). [Open Access](https://www.embopress.org/doi/full/10.15252/embj.2020104523) \| [Code](https://github.com/julistanley/ProteinFeatures) \| [Extra Documentation](https://julistanley.github.io/ProteinFeatures/docs/public/intro_public.html)
 
 #### 2019
 
@@ -151,6 +151,8 @@ This was a curriculum development project. It was a lot of fun, I was part of a 
 - **Científico Latino** (2020, 2021) — mentor to PhD applicants from backgrounds historically underrepresented in biology.
 - **CovEducation** (2020, 2021) — mentored a high school student in history, chemistry, computer science, and college preparation from the start of the COVID-19 pandemic until they entered college.
 - **Boston Public Schools Science Fair** (2020–2022) — science fair judge for Region V and VI middle and high school students in biology and computer science.
+- **Northeastern University Biochemistry Club** (2016–2019) — wrote organization grants, including applying for and implementing two years of the Northeast-regional undergraduate conference of the American Society for Biochemistry and Molecular Biology.
+- **Peer Health Exchange** (2015–2017) — taught weekly, 30–45-minute classes about physical and emotional health to high school students in Boston-area public schools.
 $md$),
   ('page'::public.entry_kind, 'news', 'news', '', null, null, true, $md$$md$),
   ('post'::public.entry_kind, 'prelim', 'How to Study for a Preliminary Exam', 'PhD Preliminary Exam Studying', '2022-08-01', null, true, $md$How do you study for a preliminary exam? I don't know, I was hoping you could tell me.
@@ -565,4 +567,4 @@ $md$),
   ('news'::public.entry_kind, 'news-2021-05-06', '', '', '2021-05-06', null, true, $md$I finished my research rotations in [Gene-Wei Li lab](http://gwli.scripts.mit.edu/group/), [Burge lab](https://www.genes.mit.edu/), and [Laub lab](https://www.laublab.mit.edu/).$md$),
   ('news'::public.entry_kind, 'news-2020-10-08', '', '', '2020-10-08', null, true, $md$My first primary-author paper is published [here in Scientific Reports](https://www.nature.com/articles/s41598-020-73987-0).$md$),
   ('news'::public.entry_kind, 'news-2020-09-01', '', '', '2020-09-01', null, true, $md$My first PhD semester at MIT!$md$),
-  ('news'::public.entry_kind, 'news-2019-06-01', '', '', '2019-06-01', null, true, $md$I gave a talk at the 2019 International *C. elegans* meeting. [More information](https://julianstanley.github.io/IWM_2019/).$md$);
+  ('news'::public.entry_kind, 'news-2019-06-01', '', '', '2019-06-01', null, true, $md$I gave a talk at the 2019 International *C. elegans* meeting. [More information](https://julistanley.github.io/IWM_2019/).$md$);

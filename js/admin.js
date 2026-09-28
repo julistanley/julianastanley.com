@@ -17,6 +17,10 @@ const supabase = isConfigured()
   ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
 const FIELDS = 'id,kind,slug,title,description,date,nav_order,published,body,updated_at';
+const SLUG_RE = /^[a-z0-9][a-z0-9_-]*$/;
+// Kept in sync with scripts/bake.sh and the entries slug check constraint.
+const RESERVED_SLUGS = ['admin', 'assets', 'css', 'js', 'snapshots',
+                        'scripts', 'supabase', 'redirect-site', 'index.html'];
 
 // ---------------------------------------------------------------- utilities
 
@@ -78,7 +82,7 @@ function newPasswordView() {
     const { error } = await supabase.auth.updateUser(
       { password: document.getElementById('password').value });
     if (error) flash(error.message, true);
-    else { location.hash = '#/'; route(); }
+    else { recovering = false; location.hash = '#/'; route(); }
   });
 }
 
@@ -192,9 +196,12 @@ async function editorView(slug, newKind) {
 
   $('ed').addEventListener('submit', async e => {
     e.preventDefault();
+    const newSlug = $('slug').value.trim();
+    if (!SLUG_RE.test(newSlug)) return flash('Slug: lowercase letters, digits, - and _ only.', true);
+    if (RESERVED_SLUGS.includes(newSlug)) return flash(`"${newSlug}" is reserved (it is a real directory on the site).`, true);
     const row = {
       kind: $('kind').value,
-      slug: $('slug').value.trim(),
+      slug: newSlug,
       title: $('title').value.trim(),
       description: $('description').value.trim(),
       date: $('date').value || null,
@@ -224,12 +231,17 @@ async function editorView(slug, newKind) {
 // ---------------------------------------------------------------- history
 
 async function historyView(slug) {
+  if (!SLUG_RE.test(slug)) return show(h`<p class="error">Bad slug: ${slug}</p>`);
   const { data: entry } = await supabase.from('entries')
     .select('id,title').eq('slug', slug).maybeSingle();
-  // For deleted entries the slug is gone from entries; search history by slug.
+  // Match by slug as well as id, so history written before a delete+recreate
+  // (new uuid, same slug) stays visible; for deleted entries only the slug
+  // remains. SLUG_RE above keeps the filter string well-formed.
   let query = supabase.from('entry_history')
     .select('id,entry_id,op,data,changed_at').order('changed_at', { ascending: false }).limit(100);
-  query = entry ? query.eq('entry_id', entry.id) : query.eq('data->>slug', slug);
+  query = entry
+    ? query.or(`entry_id.eq.${entry.id},data->>slug.eq.${slug}`)
+    : query.eq('data->>slug', slug);
   const { data, error } = await query;
   if (error) return show(h`<p class="error">${error.message}</p>`);
 
@@ -247,7 +259,7 @@ async function historyView(slug) {
       </tr>`).join('')}
     </table>
     <div id="peek-box" hidden>
-      <p><button id="restore">copy this version into the editor</button></p>
+      <p><button id="restore">restore this version now&hellip;</button></p>
       <pre id="peek-body"></pre>
     </div>`);
 
@@ -263,9 +275,15 @@ async function historyView(slug) {
   }
   document.getElementById('restore').addEventListener('click', async () => {
     if (!picked) return;
-    if (!entry) return alert('This entry was deleted; create it again from the list view, then restore.');
-    const { error } = await supabase.from('entries')
-      .update({ title: picked.data.title, body: picked.data.body }).eq('id', entry.id);
+    const d = picked.data;
+    const fields = { title: d.title, description: d.description, date: d.date,
+                     nav_order: d.nav_order, published: d.published, body: d.body };
+    if (!confirmDanger('Overwrite the live entry with this version (title, body, ' +
+        'date, description, nav position, published flag)? ' +
+        'The replaced version is itself kept in the history.')) return;
+    const { error } = entry
+      ? await supabase.from('entries').update(fields).eq('id', entry.id)
+      : await supabase.from('entries').insert({ ...fields, kind: d.kind, slug: d.slug });
     if (error) return alert(error.message);
     location.hash = `#/edit/${slug}`;
   });
@@ -277,7 +295,9 @@ let recovering = false;
 
 async function route() {
   const { data: { session } } = await supabase.auth.getSession();
-  if (recovering) { recovering = false; return newPasswordView(); }
+  // The flag stays set until the new password is saved, so a route() that was
+  // already in flight when PASSWORD_RECOVERY fired can't hide the form.
+  if (recovering) return newPasswordView();
   if (!session) return loginView();
 
   const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
@@ -292,7 +312,7 @@ if (!supabase) {
     <code>js/config.js</code> (see the README, step 1).</p>`;
 } else {
   supabase.auth.onAuthStateChange(event => {
-    if (event === 'PASSWORD_RECOVERY') { recovering = true; setTimeout(route, 0); }
+    if (event === 'PASSWORD_RECOVERY') { recovering = true; newPasswordView(); }
   });
   window.addEventListener('hashchange', route);
   route();

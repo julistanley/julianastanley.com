@@ -5,6 +5,9 @@
 #   blog/<slug>/index.html         for every published post
 #   sitemap.xml
 # Each stub is a byte-for-byte copy of index.html; js/app.js looks at the URL.
+# snapshots/baked_paths.txt records what the last bake created, so stubs for
+# renamed or deleted slugs are removed on the next run — and nothing else
+# (admin/index.html in particular) is ever touched.
 # Run from the repo root. The nightly GitHub Action runs this after exporting
 # the database; run it by hand after adding a post if you don't want to wait.
 set -euo pipefail
@@ -16,19 +19,30 @@ import json, pathlib
 root = pathlib.Path('.')
 shell = (root / 'index.html').read_bytes()
 entries = json.loads((root / 'snapshots/entries.json').read_text())
+manifest = root / 'snapshots/baked_paths.txt'
 
-# Remove stubs from a previous bake, so renamed or deleted slugs disappear.
-# Only files that are literally a copy of the shell are ever deleted.
-for old in list(root.glob('*/index.html')) + list(root.glob('blog/*/index.html')):
-    if old.parent != root and old.read_bytes() != shell:
-        continue        # a real file (e.g. admin/index.html): leave it alone
-    old.unlink()
-    if not any(old.parent.iterdir()):
-        old.parent.rmdir()
+# Names of real directories in this repo; a page slug that collides with one
+# would overwrite real files, so it is skipped here (and rejected by the
+# database's slug constraint and the editor). 'blog' is fine: its stub lives
+# happily next to the post stubs.
+RESERVED = {'admin', 'assets', 'css', 'js', 'snapshots', 'scripts',
+            'supabase', 'redirect-site'}
 
-urls = ['/']
+# Remove exactly what the previous bake created.
+if manifest.exists():
+    stale = [root / line for line in manifest.read_text().split() if line]
+    for p in stale:
+        p.unlink(missing_ok=True)
+    for p in sorted({p.parent for p in stale}, key=lambda d: -len(d.parts)):
+        if p != root and p.is_dir() and not any(p.iterdir()):
+            p.rmdir()
+
+urls, baked = ['/'], []
 for e in entries:
     if not e.get('published', True):
+        continue
+    if e['kind'] == 'page' and e['slug'] in RESERVED:
+        print(f"WARNING: page slug '{e['slug']}' is reserved; no stub baked")
         continue
     if e['kind'] == 'page' and e['slug'] != 'about':
         path, url = root / e['slug'], f"/{e['slug']}/"
@@ -38,8 +52,10 @@ for e in entries:
         continue
     path.mkdir(parents=True, exist_ok=True)
     (path / 'index.html').write_bytes(shell)
+    baked.append(str(path / 'index.html'))
     urls.append(url)
 
+manifest.write_text('\n'.join(baked) + '\n')
 (root / '404.html').write_bytes(shell)
 
 site = 'https://julianastanley.com'

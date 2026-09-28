@@ -27,7 +27,14 @@ create table public.entries (
   kind         public.entry_kind not null,
   -- The URL: pages at /<slug>/, posts at /blog/<slug>/. News slugs are only
   -- used internally. Lowercase so old mixed-case Jekyll URLs match simply.
-  slug         text not null unique check (slug ~ '^[a-z0-9][a-z0-9_-]*$'),
+  -- Names of the repo's real directories are reserved (a page slug 'admin'
+  -- would otherwise collide with the admin app when routes are baked).
+  slug         text not null unique check (
+                 slug ~ '^[a-z0-9][a-z0-9_-]*$'
+                 and slug not in ('admin', 'assets', 'css', 'js', 'snapshots',
+                                  'scripts', 'supabase', 'redirect-site',
+                                  'index.html')
+               ),
   title        text not null default '',
   description  text not null default '',   -- one-liner under post titles
   date         date,                        -- posts and news
@@ -51,7 +58,7 @@ create table public.entry_history (
 create index entry_history_entry_idx on public.entry_history (entry_id, changed_at desc);
 
 create table public.app_admins (
-  email text primary key
+  email text primary key check (email = lower(email))
 );
 
 -- The login allowed to edit the site. Add more rows for more editors.
@@ -64,7 +71,7 @@ create or replace function public.is_admin()
 returns boolean language sql stable security definer set search_path = public as $$
   select exists (
     select 1 from public.app_admins
-    where email = lower(coalesce(auth.jwt() ->> 'email', ''))
+    where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
   );
 $$;
 

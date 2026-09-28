@@ -16,6 +16,7 @@ const SITE_TITLE = 'Juliana (Juli) Stanley';
 
 function resolve(pathname) {
   const parts = pathname.toLowerCase().split('/').filter(Boolean);
+  if (parts.at(-1) === 'index.html') parts.pop();   // /blog/index.html etc.
   if (parts.length === 0) return { type: 'page', slug: 'about' };
   if (parts[0] === 'blog' && parts.length > 1) {
     // Last segment so old Jekyll URLs like /blog/2022/Prelim/ still resolve.
