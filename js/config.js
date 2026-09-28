@@ -7,8 +7,8 @@
 // Until these are filled in, the site serves the checked-in copy of the
 // content from snapshots/entries.json and the admin page explains itself.
 
-export const SUPABASE_URL = 'REPLACE_WITH_PROJECT_URL';
-export const SUPABASE_ANON_KEY = 'REPLACE_WITH_ANON_KEY';
+export const SUPABASE_URL = 'https://ucyhgsaakixslemqbwct.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_bx_vcGu0ZS3JjMc_HzuyLg_6H4E8ZS-';
 
 export function isConfigured() {
   return !SUPABASE_URL.startsWith('REPLACE') && !SUPABASE_ANON_KEY.startsWith('REPLACE');
