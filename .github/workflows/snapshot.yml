@@ -40,6 +40,21 @@ jobs:
       - name: Rebake route stubs and sitemap
         run: bash scripts/bake.sh
 
+      - name: Keepalive after a quiet stretch
+        run: |
+          # GitHub disables a schedule after 60 days without commits. Content
+          # edits reset that (the snapshot commit below), but a quiet couple
+          # of months would not - and if the schedule stops, so does the
+          # daily query that keeps the free Supabase project awake. So once
+          # the last commit is 50+ days old, change a marker file; the commit
+          # step below then has something to commit.
+          last=$(git log -1 --format=%ct)
+          age_days=$(( ( $(date +%s) - last ) / 86400 ))
+          if [ "$age_days" -ge 50 ]; then
+            date -u +%Y-%m-%dT%H:%MZ > snapshots/.keepalive
+            echo "Last commit is $age_days days old; keepalive commit."
+          fi
+
       - name: Commit if anything changed
         run: |
           git config user.name  "snapshot-bot"

@@ -30,8 +30,10 @@ Notes to self, for editing at /admin/:
 - unpublishing the blog or news page hides that entire section
 - a new post's /blog/... URL appears after the nightly run; run the
   "Nightly content snapshot" action by hand to get it sooner
-- GitHub turns the nightly schedule off after ~60 days without repo
-  activity (it emails first); re-enable it from the Actions tab
+- the nightly job's commits count as repo activity, and after ~50 quiet
+  days it makes a small keepalive commit, so GitHub shouldn't ever disable
+  the schedule on its own; if the Actions tab ever says it did, one click
+  re-enables it
 
 ## Running locally
 
