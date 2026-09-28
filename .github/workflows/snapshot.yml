@@ -1,0 +1,67 @@
+# =============================================================================
+# Nightly export of the website content from Supabase into this repo.
+#
+# What it does, and why:
+#   1. Pulls every *published* entry over the public REST API (using the anon
+#      key already committed in js/config.js — no secrets needed, this is the
+#      same data anyone can read on the website).
+#   2. Writes it to snapshots/entries.json. That file is (a) the backup of the
+#      site's text, versioned in git, and (b) what the site itself falls back
+#      to if Supabase is ever unreachable.
+#   3. Reruns scripts/bake.sh so new blog posts get their /blog/<slug>/ URL
+#      and the sitemap stays current.
+#   4. Commits, only if something changed.
+#
+# Side effect we rely on: the daily API call counts as activity, so the free
+# Supabase project is not paused for inactivity.
+#
+# Drafts are NOT exported (this repo is public). If you want a private backup
+# of drafts and edit history too, copy the stuff-to-investigate-backups setup.
+# =============================================================================
+name: Nightly content snapshot
+
+on:
+  schedule:
+    - cron: '43 6 * * *'        # 06:43 UTC daily (odd minute avoids the rush)
+  workflow_dispatch:            # run it by hand from the Actions tab
+  push:
+    branches: [main]
+    paths: [index.html]         # shell changed -> stubs must be rebaked
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Export published entries
+        run: |
+          set -euo pipefail
+          URL=$(sed -n "s/^export const SUPABASE_URL = '\([^']*\)'.*/\1/p" js/config.js)
+          KEY=$(sed -n "s/^export const SUPABASE_ANON_KEY = '\([^']*\)'.*/\1/p" js/config.js)
+          if [ -z "$URL" ] || [ "${URL#REPLACE}" != "$URL" ]; then
+            echo "Supabase not configured yet; nothing to export."; exit 0
+          fi
+          FIELDS='kind,slug,title,description,date,nav_order,published,body,updated_at'
+          # One page is plenty: PostgREST returns up to 1000 rows per request
+          # and this site has a few dozen entries.
+          curl -fsS "$URL/rest/v1/entries?select=$FIELDS&published=eq.true&order=slug.asc&limit=1000" \
+            -H "apikey: $KEY" | python3 -m json.tool > snapshots/entries.json
+
+      - name: Rebake route stubs and sitemap
+        run: bash scripts/bake.sh
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name  "snapshot-bot"
+          git config user.email "snapshot-bot@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes since last snapshot."
+          else
+            git commit -m "Snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          fi
