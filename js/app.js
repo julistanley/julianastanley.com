@@ -90,8 +90,15 @@ function render(entries) {
   const main = document.getElementById('main');
   let entry, html = '', title = SITE_TITLE;
 
+  // Whole sections switch off with their page's published flag: an
+  // unpublished 'blog' page hides every post, an unpublished 'news' page
+  // hides the news items (loadEntries only ever sees published entries,
+  // so presence in bySlug means published).
+  const blogOn = entries.bySlug.get('blog')?.kind === 'page';
+  const newsOn = entries.bySlug.get('news')?.kind === 'page';
+
   if (route.type === 'post') {
-    entry = entries.posts.find(p => p.slug === route.slug);
+    entry = blogOn ? entries.posts.find(p => p.slug === route.slug) : undefined;
   } else {
     entry = entries.bySlug.get(route.slug);
     if (entry && entry.kind !== 'page') entry = undefined;  // settings, news
@@ -100,8 +107,9 @@ function render(entries) {
   if (!entry) {
     title = `not found | ${SITE_TITLE}`;
     html = `<h1>404</h1>
-            <p>No such page. Maybe you want one of these posts:</p>
-            ${postListHtml(entries.posts)}`;
+            <p>No such page.</p>
+            ${blogOn && entries.posts.length
+              ? `<p>Maybe you want one of these posts:</p>${postListHtml(entries.posts)}` : ''}`;
   } else if (entry.kind === 'post') {
     title = `${entry.title} | ${SITE_TITLE}`;
     html = `<h1>${escapeHtml(entry.title)}</h1>
@@ -109,10 +117,12 @@ function render(entries) {
             ${renderMarkdown(entry.body)}
             <p><a href="/blog/">&larr; blog</a></p>`;
   } else if (entry.slug === 'about') {
-    html = `${renderMarkdown(entry.body)}
-            <h2 id="news">news</h2>
-            ${newsHtml(entries.news, NEWS_ON_ABOUT)}
-            <p><a href="/news/">all news &rarr;</a></p>`;
+    const newsBlock = newsOn && entries.news.length
+      ? `<h2 id="news">news</h2>
+         ${newsHtml(entries.news, NEWS_ON_ABOUT)}
+         <p><a href="/news/">all news &rarr;</a></p>`
+      : '';
+    html = `${renderMarkdown(entry.body)}${newsBlock}`;
   } else if (entry.slug === 'blog') {
     title = `blog | ${SITE_TITLE}`;
     html = `<h1>${escapeHtml(entry.title)}</h1>

@@ -141,10 +141,11 @@ working).
 
 ## Running locally
 
-    python3 -m http.server 8766
+    python3 scripts/serve.py
 
 then visit http://localhost:8766. The page uses ES modules, so it must be
-served over HTTP rather than opened as a file. Without Supabase configured,
+served over HTTP rather than opened as a file. (The script is plain
+`http.server` with caching turned off, so edits show up on reload.) Without Supabase configured,
 the site renders from `snapshots/entries.json` and `/admin/` explains itself.
 
 ## Data model
@@ -159,7 +160,11 @@ One table, `entries`, holds every piece of text:
 - `nav_order` puts a page in the top navigation and orders the tabs
   (empty = hidden). The tab label is the page's title. The blog tab is
   simply the `blog` page's row.
-- `published = false` keeps drafts invisible to everyone but you.
+- `published = false` keeps drafts invisible to everyone but you. It is
+  also the section switch: unpublishing the **blog** page hides the tab,
+  the post listings, and every post URL in one go (posts keep their own
+  published flags for when it comes back); likewise the **news** page
+  hides the news items everywhere, including the front page.
 - `body` is Markdown.
 
 `entry_history` records the previous version of a row on every change

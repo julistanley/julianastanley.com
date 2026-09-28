@@ -173,7 +173,10 @@ async function editorView(slug, newKind) {
       <label for="nav_order">nav position (pages only; empty = not in the nav)</label>
       <input id="nav_order" type="number" value="${entry.nav_order ?? ''}">
       <label><input id="published" type="checkbox" ${entry.published ? 'checked' : ''}
-             style="width: auto"> published</label>
+             style="width: auto"> published
+             <span class="ok">— unchecked hides this from the site entirely;
+             unpublishing the <b>blog</b> or <b>news</b> page hides that whole
+             section (tab, listings, and post/news URLs)</span></label>
       <label for="body">body (Markdown)</label>
       <textarea id="body" spellcheck="true">${escapeHtml(entry.body)}</textarea>
       <p>

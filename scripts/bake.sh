@@ -37,6 +37,11 @@ if manifest.exists():
         if p != root and p.is_dir() and not any(p.iterdir()):
             p.rmdir()
 
+# An unpublished 'blog' page switches the whole blog section off (the
+# frontend does the same); no post stubs then, so post URLs are plain 404s.
+blog_on = any(e['kind'] == 'page' and e['slug'] == 'blog'
+              and e.get('published', True) for e in entries)
+
 urls, baked = ['/'], []
 for e in entries:
     if not e.get('published', True):
@@ -46,7 +51,7 @@ for e in entries:
         continue
     if e['kind'] == 'page' and e['slug'] != 'about':
         path, url = root / e['slug'], f"/{e['slug']}/"
-    elif e['kind'] == 'post':
+    elif e['kind'] == 'post' and blog_on:
         path, url = root / 'blog' / e['slug'], f"/blog/{e['slug']}/"
     else:
         continue
