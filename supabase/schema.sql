@@ -1,8 +1,10 @@
 -- =============================================================================
--- julianastanley.com — initial schema
+-- julianastanley.com — the whole database schema
 --
--- Run this once in the Supabase dashboard: SQL Editor -> New query -> paste ->
--- Run. Then run 0002_seed.sql the same way.
+-- The live Supabase project already has all of this; the file exists so the
+-- site can be rebuilt from nothing. In that case: run this once in a fresh
+-- project's SQL editor, then seed the content from the last backup with
+-- scripts/restore.py (see the README).
 --
 -- Design summary
 --   entries        every piece of text on the site. kind 'page' (about,

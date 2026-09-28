@@ -1,6 +1,6 @@
 // Public configuration. Both values are safe to commit: the anon key is
 // meant to ship in the browser, and Row Level Security in Postgres is what
-// actually protects the data (see supabase/migrations/0001_init.sql).
+// actually protects the data (see supabase/schema.sql).
 //
 // Find them in the Supabase dashboard: Project Settings -> API.
 //

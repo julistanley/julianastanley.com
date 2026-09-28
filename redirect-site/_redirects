@@ -1,10 +1,4 @@
-# Netlify redirect rules: every old domain -> julianastanley.com, keeping the
-# path, as permanent (301) redirects. This folder is its own tiny Netlify
-# "site": drag-and-drop it at https://app.netlify.com/drop (or deploy it any
-# other way), then attach julistanley.com, julianstanley.com, and their www
-# subdomains to that Netlify site as custom domains.
-https://julistanley.com/*      https://julianastanley.com/:splat  301!
-https://www.julistanley.com/*  https://julianastanley.com/:splat  301!
-https://julianstanley.com/*    https://julianastanley.com/:splat  301!
-https://www.julianstanley.com/* https://julianastanley.com/:splat 301!
-/*                             https://julianastanley.com/:splat  301!
+# Deployed as its own Netlify site, with the old domains (julistanley.com,
+# julianstanley.com, and their www variants) attached to it. Every request
+# goes to the same path on the new domain.
+/*  https://julianastanley.com/:splat  301!

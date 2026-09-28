@@ -313,7 +313,7 @@ async function route() {
 
 if (!supabase) {
   main.innerHTML = `<p>Supabase is not configured yet: fill in
-    <code>js/config.js</code> (see the README, step 1).</p>`;
+    <code>js/config.js</code> (see the README).</p>`;
 } else {
   supabase.auth.onAuthStateChange(event => {
     if (event === 'PASSWORD_RECOVERY') { recovering = true; newPasswordView(); }

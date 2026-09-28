@@ -1,23 +1,9 @@
-# =============================================================================
-# Nightly export of the website content from Supabase into this repo.
-#
-# What it does, and why:
-#   1. Pulls every *published* entry over the public REST API (using the anon
-#      key already committed in js/config.js — no secrets needed, this is the
-#      same data anyone can read on the website).
-#   2. Writes it to snapshots/entries.json. That file is (a) the backup of the
-#      site's text, versioned in git, and (b) what the site itself falls back
-#      to if Supabase is ever unreachable.
-#   3. Reruns scripts/bake.sh so new blog posts get their /blog/<slug>/ URL
-#      and the sitemap stays current.
-#   4. Commits, only if something changed.
-#
-# Side effect we rely on: the daily API call counts as activity, so the free
-# Supabase project is not paused for inactivity.
-#
-# Drafts are NOT exported (this repo is public). If you want a private backup
-# of drafts and edit history too, copy the stuff-to-investigate-backups setup.
-# =============================================================================
+# Nightly export of the published website content into this repo:
+# snapshots/entries.json is the backup, the site's fallback, and the daily
+# activity that keeps the free Supabase project from pausing. Also rebakes
+# the route stubs (scripts/bake.sh) so new posts get their URL. Uses the
+# public anon key from js/config.js, so there are no secrets to configure;
+# drafts are not exported (this repo is public). Commits only on changes.
 name: Nightly content snapshot
 
 on:
