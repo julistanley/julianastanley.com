@@ -113,7 +113,7 @@ async function listView() {
       <button id="new-page">new page</button>
       <button id="signout" style="float: right">sign out</button>
     </p>
-    ${section('page')}${section('post')}${section('news')}
+    ${section('page')}${section('post')}${section('news')}${section('setting')}
     <h2>account</h2>
     <form id="pw" class="stack" style="max-width: 40ch">
       <label for="newpw">change password</label>
@@ -165,7 +165,7 @@ async function editorView(slug, newKind) {
       <input id="description" type="text" value="${escapeHtml(entry.description)}">
       <label for="kind">kind</label>
       <select id="kind">
-        ${['page', 'post', 'news'].map(k =>
+        ${['page', 'post', 'news', 'setting'].map(k =>
           `<option ${k === entry.kind ? 'selected' : ''}>${k}</option>`).join('')}
       </select>
       <label for="date">date (posts and news)</label>
@@ -180,7 +180,8 @@ async function editorView(slug, newKind) {
         <button type="submit">save</button>
         <button type="button" id="toggle-preview">preview</button>
         ${entry.id ? '<button type="button" id="delete">delete…</button>' : ''}
-        ${entry.id ? `<a href="${entry.kind === 'post' ? '/blog/' : '/'}${entry.slug === 'about' ? '' : entry.slug + '/'}">view</a>` : ''}
+        ${entry.id && (entry.kind === 'page' || entry.kind === 'post')
+          ? `<a href="${entry.kind === 'post' ? '/blog/' : '/'}${entry.slug === 'about' ? '' : entry.slug + '/'}">view</a>` : ''}
       </p>
       <p id="flash"></p>
     </form>

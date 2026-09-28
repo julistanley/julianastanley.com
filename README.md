@@ -62,6 +62,9 @@ nightly bake. Run the "Nightly content snapshot" action by hand (Actions tab
    - `0002_seed.sql` — the initial content.
    - `0003_fixes.sql` — only for a database that ran 0001/0002 before
      2026-09-28; fresh installs already include these fixes.
+   - `0004_settings.sql`, then `0005_settings_seed.sql` **as a separate
+     query** — the header/footer settings rows (0004 is only needed on a
+     database created before they existed; both are safe to re-run).
 3. **Authentication → Sign In / Providers → Email**: turn **Allow new users
    to sign up** OFF. This site has exactly one account.
 4. **Authentication → Users → Add user → Create new user**: your admin email
@@ -148,10 +151,14 @@ the site renders from `snapshots/entries.json` and `/admin/` explains itself.
 
 One table, `entries`, holds every piece of text:
 
-- `kind`: `page` (about, publications, teaching, …), `post` (blog), or
-  `news` (the dated one-liners on the front page).
+- `kind`: `page` (about, publications, teaching, …), `post` (blog),
+  `news` (the dated one-liners on the front page), or `setting` (site
+  chrome: the rows with slugs `site-title`, `tagline`, and `footer` hold
+  the header and footer of every page — edit their body at `/admin/`).
 - `slug` is the URL: pages at `/<slug>/`, posts at `/blog/<slug>/`.
-- `nav_order` puts a page in the top navigation (empty = hidden).
+- `nav_order` puts a page in the top navigation and orders the tabs
+  (empty = hidden). The tab label is the page's title. The blog tab is
+  simply the `blog` page's row.
 - `published = false` keeps drafts invisible to everyone but you.
 - `body` is Markdown.
 

@@ -12,7 +12,31 @@ import { loadEntries } from './content.js';
 import { renderMarkdown, fmtDate, escapeHtml } from './render.js';
 
 const NEWS_ON_ABOUT = 5;
-const SITE_TITLE = 'Juliana (Juli) Stanley';
+
+// Site chrome lives in the database too, as kind='setting' entries edited at
+// /admin/ like everything else; these are the fallbacks if a row is missing.
+const DEFAULTS = {
+  'site-title': 'Juliana (Juli) Stanley',
+  'tagline': '',
+  'footer': '© {year} Juliana Stanley',
+};
+
+function setting(entries, slug) {
+  const e = entries.bySlug.get(slug);
+  return (e?.kind === 'setting' && e.body.trim()) || DEFAULTS[slug];
+}
+
+/** Fills in the header; returns the site title for use in document.title. */
+function applyChrome(entries) {
+  const title = setting(entries, 'site-title');
+  const tagline = setting(entries, 'tagline');
+  document.querySelector('header h1 a').textContent = title;
+  const tag = document.querySelector('header .tagline');
+  tag.textContent = tagline;
+  tag.hidden = !tagline;
+  document.querySelector('meta[name="description"]')?.setAttribute('content', tagline);
+  return title;
+}
 
 function resolve(pathname) {
   const parts = pathname.toLowerCase().split('/').filter(Boolean);
@@ -61,15 +85,16 @@ function postListHtml(posts) {
 }
 
 function render(entries) {
+  const SITE_TITLE = applyChrome(entries);
   const route = resolve(location.pathname);
   const main = document.getElementById('main');
   let entry, html = '', title = SITE_TITLE;
 
   if (route.type === 'post') {
-    entry = entries.posts.find(p => p.slug === route.slug)
-         ?? entries.bySlug.get(route.slug);
+    entry = entries.posts.find(p => p.slug === route.slug);
   } else {
     entry = entries.bySlug.get(route.slug);
+    if (entry && entry.kind !== 'page') entry = undefined;  // settings, news
   }
 
   if (!entry) {
@@ -125,9 +150,11 @@ function renderFooter(entries, entry) {
   const edit = hasSession() && entry
     ? ` &middot; <a href="/admin/#/edit/${entry.slug}">edit this page</a>`
     : '';
+  const text = setting(entries, 'footer')
+    .replaceAll('{year}', String(new Date().getFullYear()));
+  const html = renderMarkdown(text).trim().replace(/^<p>|<\/p>$/g, '');
   document.getElementById('footer').innerHTML =
-    `&copy; ${new Date().getFullYear()} Juliana Stanley &middot;
-     last updated ${fmtDate(last)} &middot;
+    `${html} &middot; last updated ${fmtDate(last)} &middot;
      <a href="/admin/">admin</a>${edit}`;
 }
 

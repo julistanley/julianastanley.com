@@ -567,4 +567,7 @@ $md$),
   ('news'::public.entry_kind, 'news-2021-05-06', '', '', '2021-05-06', null, true, $md$I finished my research rotations in [Gene-Wei Li lab](http://gwli.scripts.mit.edu/group/), [Burge lab](https://www.genes.mit.edu/), and [Laub lab](https://www.laublab.mit.edu/).$md$),
   ('news'::public.entry_kind, 'news-2020-10-08', '', '', '2020-10-08', null, true, $md$My first primary-author paper is published [here in Scientific Reports](https://www.nature.com/articles/s41598-020-73987-0).$md$),
   ('news'::public.entry_kind, 'news-2020-09-01', '', '', '2020-09-01', null, true, $md$My first PhD semester at MIT!$md$),
-  ('news'::public.entry_kind, 'news-2019-06-01', '', '', '2019-06-01', null, true, $md$I gave a talk at the 2019 International *C. elegans* meeting. [More information](https://julistanley.github.io/IWM_2019/).$md$);
+  ('news'::public.entry_kind, 'news-2019-06-01', '', '', '2019-06-01', null, true, $md$I gave a talk at the 2019 International *C. elegans* meeting. [More information](https://julistanley.github.io/IWM_2019/).$md$),
+  ('setting'::public.entry_kind, 'site-title', 'site title', 'The headline at the top of every page (plain text).', null, null, true, $md$Juliana (Juli) Stanley$md$),
+  ('setting'::public.entry_kind, 'tagline', 'tagline', 'The line under the headline (plain text; empty hides it).', null, null, true, $md$(Computational) Biologist and PhD Student, MIT$md$),
+  ('setting'::public.entry_kind, 'footer', 'footer', 'Markdown. {year} becomes the current year; ''last updated'' and the admin link are appended automatically.', null, null, true, $md$© {year} Juliana Stanley$md$);

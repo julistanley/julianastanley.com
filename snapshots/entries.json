@@ -22,6 +22,17 @@
   "updated_at": "2026-09-28T12:00:00+00:00"
  },
  {
+  "kind": "setting",
+  "slug": "footer",
+  "title": "footer",
+  "description": "Markdown. {year} becomes the current year; 'last updated' and the admin link are appended automatically.",
+  "date": null,
+  "nav_order": null,
+  "published": true,
+  "body": "© {year} Juliana Stanley",
+  "updated_at": "2026-09-28T12:00:00+00:00"
+ },
+ {
   "kind": "post",
   "slug": "mongo_rshiny",
   "title": "Connecting a remote MongoDB database with R/Shiny",
@@ -162,6 +173,28 @@
   "nav_order": null,
   "published": true,
   "body": "## Goals \n\n### Introducing Rend-Seq data\nThe Li Lab generates end-enriched RNA sequencing (Rend-Seq) data that looks something like this:\n\n<img width=\"1345\" alt=\"image\" src=\"https://user-images.githubusercontent.com/22749289/160170871-f560c50b-d403-4225-a63c-357a3b5ac225.png\">\n\nIn the bottom pane, we can see the _mrp_ is a gene on the minus (reverse) strand of the _E. coli_ genome and _metG_ is a gene on the plus (forward) strand of the genome.\n\nThe top pane shows end-enriched reads from the plus strand and the middle pane shows reads from the minus strand. 5' (often transcription start) peaks are in blue, and 3' (often transcription stop) peaks are in red. So, for example, we can see that _metG_ has strong 3' peak at the end of the transcript, but not as strong of a 5' peak. In contrast, _mrp_ has approximately equally-strong 5' and 3' peaks.\n\n### Peak Calling\n\n#### Introduction\n\nBy eye, it is easy to see end-enriched peaks in the data above. Our eyes are fairly adept at spotting peaks, but it can be a time-consuming process to annotate all peaks in the genome (Li Lab member Mandy Levine did just this with the small T4 genome and it took hundreds of hours).\n\nFor example, take a look at this genomic region:\n\n<img width=\"543\" alt=\"image\" src=\"https://user-images.githubusercontent.com/22749289/160172166-3409d066-5c9b-49ab-bd03-710c894d7d3b.png\">\n\nIt's relatively easy to see real peaks between the thiM and rcnR gene bodies. However, the signals that we see through the thiM gene body don't seem biological: those are probably sequencing artificats. Computationally, it might not be trivial to distinguish between these two. \n\n#### Implementation\n\nTODO\n",
+  "updated_at": "2026-09-28T12:00:00+00:00"
+ },
+ {
+  "kind": "setting",
+  "slug": "site-title",
+  "title": "site title",
+  "description": "The headline at the top of every page (plain text).",
+  "date": null,
+  "nav_order": null,
+  "published": true,
+  "body": "Juliana (Juli) Stanley",
+  "updated_at": "2026-09-28T12:00:00+00:00"
+ },
+ {
+  "kind": "setting",
+  "slug": "tagline",
+  "title": "tagline",
+  "description": "The line under the headline (plain text; empty hides it).",
+  "date": null,
+  "nav_order": null,
+  "published": true,
+  "body": "(Computational) Biologist and PhD Student, MIT",
   "updated_at": "2026-09-28T12:00:00+00:00"
  },
  {

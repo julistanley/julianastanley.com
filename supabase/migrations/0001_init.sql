@@ -20,7 +20,9 @@
 -- a second line of defense on top of that.
 -- =============================================================================
 
-create type public.entry_kind as enum ('page', 'post', 'news');
+-- 'setting' rows are not pages: they hold site chrome the frontend reads by
+-- slug ('site-title', 'tagline', 'footer'), editable at /admin/ like the rest.
+create type public.entry_kind as enum ('page', 'post', 'news', 'setting');
 
 create table public.entries (
   id           uuid primary key default gen_random_uuid(),
