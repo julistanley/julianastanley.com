@@ -8,7 +8,7 @@
 //   /news/               the 'news' page body, plus every news item
 // Every route is served by a copy of index.html (see scripts/bake.sh), so
 // this file runs once per page load; there is no client-side navigation.
-import { loadEntries } from './content.js';
+import { loadSnapshot, loadLive } from './content.js';
 import { renderMarkdown, fmtDate, escapeHtml } from './render.js';
 
 const NEWS_ON_ABOUT = 5;
@@ -168,10 +168,20 @@ function renderFooter(entries, entry) {
      <a href="/admin/">admin</a>${edit}`;
 }
 
-loadEntries()
-  .then(render)
-  .catch(err => {
+// Render the snapshot right away (it's local and at most a nightly run
+// old), then sync with the database and re-render only if anything is
+// actually different - so an edit made since last night still shows up,
+// without a flash on the loads where nothing changed.
+(async () => {
+  const snap = await loadSnapshot();
+  if (snap) render(snap);
+  const live = await loadLive();
+  if (live && (!snap || JSON.stringify(live.list) !== JSON.stringify(snap.list))) {
+    render(live);
+  }
+  if (!snap && !live) {
     document.getElementById('main').innerHTML =
-      `<p>Could not load the site content (${escapeHtml(err.message)}).
-       The raw content lives in <a href="/snapshots/entries.json">snapshots/entries.json</a>.</p>`;
-  });
+      `<p>Could not load the site content. The raw content lives in
+       <a href="/snapshots/entries.json">snapshots/entries.json</a>.</p>`;
+  }
+})();

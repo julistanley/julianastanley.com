@@ -21,8 +21,12 @@ A nightly GitHub Action exports the published content to
 `snapshots/entries.json`. That file is the backup, the fallback the site
 renders if the database is ever unreachable, and the daily activity that
 keeps the free Supabase project from being paused. The same job runs
-`scripts/bake.sh`, which copies `index.html` to `<slug>/index.html` for
-each page and post so deep links work on GitHub Pages.
+`scripts/bake.sh`, which writes `index.html` out to `<slug>/index.html`
+for each page and post (deep links on GitHub Pages) with the current
+header, nav, and page title filled in. The browser first renders from the
+snapshot, then re-renders from the database only if something changed —
+so the first paint is at most one nightly run out of date and there's no
+flash when nothing changed.
 
 Notes to self, for editing at /admin/:
 

@@ -1,22 +1,24 @@
 <!doctype html>
-<!-- This one file serves every route. scripts/bake.sh copies it to
-     404.html and to <slug>/index.html for each page and post, so deep
-     links work on GitHub Pages. js/app.js looks at the URL and renders
-     the right content from the database (or snapshots/entries.json). -->
+<!-- This one file serves every route: scripts/bake.sh writes a copy of it
+     to 404.html and to <slug>/index.html for each page and post, filling in
+     the header, nav, and <title> between the marker comments from the last
+     content snapshot. js/app.js then renders the body from the snapshot and
+     quietly re-syncs with the database, so at worst the first paint is one
+     nightly run out of date. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Juliana (Juli) Stanley</title>
-  <meta name="description" content="(Computational) Biologist and PhD Student, MIT">
+  <title>Juliana Stanley, PhD</title>
+  <meta name="description" content="Postdoctoral Scholar, Tufts">
   <link rel="stylesheet" href="/css/site.css">
   <link rel="icon" href="data:,">
 </head>
 <body>
   <header>
-    <h1><a href="/" style="color: inherit; text-decoration: none">Juliana (Juli) Stanley</a></h1>
-    <p class="tagline">(Computational) Biologist and PhD Student, MIT</p>
-    <nav id="nav"></nav>
+    <h1><a href="/" style="color: inherit; text-decoration: none"><!--title-->Juliana Stanley, PhD<!--/title--></a></h1>
+    <p class="tagline"><!--tagline-->Postdoctoral Scholar, Tufts<!--/tagline--></p>
+    <nav id="nav"><!--nav--><a href="/">about</a><a href="/publications/">publications</a><a href="/teaching/">teaching</a><!--/nav--></nav>
   </header>
 
   <main id="main">
