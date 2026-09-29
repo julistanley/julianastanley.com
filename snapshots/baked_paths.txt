@@ -1,3 +1,5 @@
 news/index.html
 publications/index.html
+schedule/index.html
 teaching/index.html
+tools/index.html
