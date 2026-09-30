@@ -11,6 +11,17 @@
         "updated_at": "2026-09-28T16:20:40.839369+00:00"
     },
     {
+        "kind": "news",
+        "slug": "defense",
+        "title": "I defended my PhD!",
+        "description": "",
+        "date": "2026-06-15",
+        "nav_order": null,
+        "published": true,
+        "body": "I successfully defended my PhD!",
+        "updated_at": "2026-09-29T14:39:15.037073+00:00"
+    },
+    {
         "kind": "setting",
         "slug": "footer",
         "title": "footer",
