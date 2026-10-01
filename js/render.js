@@ -19,8 +19,21 @@ const renderer = {
 
 marked.use({ gfm: true, renderer });
 
+// Markdown bodies may carry inline HTML (the about-page photo, embeds).
+// The sanitizer strips iframes by default; allow them, but only https ones
+// (e.g. an embedded published calendar).
+DOMPurify.addHook('uponSanitizeElement', (node, data) => {
+  if (data.tagName === 'iframe'
+      && !(node.getAttribute?.('src') ?? '').startsWith('https://')) {
+    node.remove();
+  }
+});
+
 export function renderMarkdown(md) {
-  return DOMPurify.sanitize(marked.parse(md ?? ''));
+  return DOMPurify.sanitize(marked.parse(md ?? ''), {
+    ADD_TAGS: ['iframe'],
+    ADD_ATTR: ['frameborder', 'allowfullscreen', 'scrolling', 'loading'],
+  });
 }
 
 /** '2022-08-01' -> 'Aug 1, 2022' (date-only, so pin to UTC to avoid drift). */
