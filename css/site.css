@@ -51,16 +51,39 @@ img { max-width: 100%; height: auto; }
 img.portrait { float: right; width: 150px; margin: 0 0 1rem 1.5rem; }
 
 /* Embeds (e.g. a published calendar) break out of the narrow text column
-   to near full viewport width, with a 1rem gutter. Override the height
-   inline if needed; add style="width: 100%; margin-left: 0" to keep one
-   inside the column instead. */
+   to near full viewport width (capped at 1200px, centered), with a 1rem
+   gutter. Override the height inline if needed; add
+   style="width: 100%; margin-left: 0" to keep one inside the column. */
 iframe {
   width: calc(100vw - 2rem);
-  max-width: calc(100vw - 2rem);
-  margin-left: calc(50% - 50vw + 1rem);
+  max-width: 1200px;
+  margin-left: calc(50% - min(50vw - 1rem, 600px));
   height: 70vh;
   border: 1px solid var(--rule);
   background: #fff;
+}
+
+/* Wrap an iframe in <div class="dense"> and the embedded app lays out for
+   a one-third larger screen, scaled back down to the same box - smaller
+   text, more in view. The wrapper takes the usual breakout box; the iframe
+   renders oversized and is shrunk into it. */
+div.dense {
+  width: calc(100vw - 2rem);
+  max-width: 1200px;
+  margin-left: calc(50% - min(50vw - 1rem, 600px));
+  height: 70vh;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  background: #fff;
+}
+div.dense > iframe {
+  width: calc(100% / 0.75);
+  height: calc(100% / 0.75);
+  transform: scale(0.75);
+  transform-origin: top left;
+  margin: 0;
+  max-width: none;
+  border: 0;
 }
 
 blockquote {
