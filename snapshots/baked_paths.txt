@@ -1,5 +1,11 @@
+blog/index.html
+blog/mongo_rshiny/index.html
 news/index.html
+blog/prelim/index.html
 publications/index.html
 schedule/index.html
+blog/sensoroverlord_reviews/index.html
+blog/shinyigv/index.html
 teaching/index.html
 tools/index.html
+blog/ubuntussd/index.html
