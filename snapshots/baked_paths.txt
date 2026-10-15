@@ -1,3 +1,4 @@
+blog/2026octoberreadinglist/index.html
 blog/index.html
 blog/mongo_rshiny/index.html
 news/index.html
